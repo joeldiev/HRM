@@ -7,8 +7,11 @@ import torch.nn.functional as F
 try:
     from flash_attn_interface import flash_attn_func  # type: ignore[import]
 except ImportError:
-    # Fallback to FlashAttention 2
-    from flash_attn import flash_attn_func  # type: ignore[import]
+    try:
+        from flash_attn import flash_attn_func  # type: ignore[import]
+    except ImportError:
+        print("Warning: flash_attn not found. Using fallback implementation.")
+        from .fallback_layers import flash_attn_func
 
 from models.common import trunc_normal_init_
 
